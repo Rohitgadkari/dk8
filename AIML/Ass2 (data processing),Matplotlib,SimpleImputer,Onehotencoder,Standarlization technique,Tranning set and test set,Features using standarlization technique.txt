@@ -1,0 +1,158 @@
+ASS 2 
+ SET A
+//Q1 Matplolib library///
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+iris_df = pd.read_csv('iris.csv')
+
+def scatter_plot(x_data, y_data, x_label, y_label, title):
+    plt.scatter(x_data, y_data)
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.show()
+
+scatter_plot(
+    iris_df['sepal.length'],
+    iris_df['sepal.width'],
+    'Sepal Length (cm)',
+    'Sepal Width (cm)',
+    'Scatter Plot of Sepal Length vs Sepal Width'
+)
+
+scatter_plot(
+    iris_df['petal.length'],
+    iris_df['petal.width'],
+    'Petal Length (cm)',
+    'Petal Width (cm)',
+    'Scatter Plot of Petal Length vs Petal Width'
+)
+
+////Q2 Simpleimputer////
+
+import pandas as pd
+from sklearn.impute import SimpleImputer
+
+iris_df = pd.read_csv('iris.csv')
+
+print("Original Dataset:")
+print(iris_df)
+
+def replace_null_with_mean(dataset):
+    numeric_cols = dataset.select_dtypes(include=['number']).columns
+    imputer = SimpleImputer(strategy='mean')
+    
+    for col in numeric_cols:
+        dataset[col] = imputer.fit_transform(dataset[[col]])
+    
+    return dataset
+
+iris_df_imputed = replace_null_with_mean(iris_df)
+
+print("\nDataset after replacing null values with mean:")
+print(iris_df_imputed)
+
+////Q3 onehotencoder////
+
+import pandas as pd
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+
+iris_df = pd.read_csv('iris.csv')
+
+
+le = LabelEncoder()
+one_hot_encoder = OneHotEncoder()
+
+
+for col in iris_df.select_dtypes(include='object').columns:
+    iris_df[col] = le.fit_transform(iris_df[col])
+
+iris_df_one_hot_encoded = pd.get_dummies(iris_df, columns=['variety'])
+
+print("\nDataset after Label Encoding:")
+print(iris_df[col])
+
+print("\nDataset after One-Hot Encoding:")
+print(iris_df_one_hot_encoded)
+
+////Q4 standardization tecnique////
+
+import pandas as pd
+
+
+salary_data = pd.read_csv('Salary_Data.csv')
+
+
+print("Original Dataset:")
+print(salary_data)
+
+
+def basic_standardization(column):
+    mean = column.mean()
+    std_dev = column.std()
+    standardized_column = (column - mean) / std_dev
+    return standardized_column
+
+numerical_columns = salary_data.select_dtypes(include=['float64', 'int64']).columns
+for col in numerical_columns:
+    salary_data[col] = basic_standardization(salary_data[col])
+
+
+print("\nDataset after Basic Standardization:")
+print(salary_data)
+
+
+///#A2 SETB Q1   tranning set test set (('iris.csv')////
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+iris_data = pd.read_csv('iris.csv')
+
+print("Original dataset:")
+print(iris_data.head())
+
+X = iris_data.drop('variety', axis=1)
+y = iris_data['variety']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+print("\nShapes of training and test sets:")
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
+print("y_train shape:", y_train.shape)
+print("y_test shape:", y_test.shape)
+
+
+
+
+
+//# SET B Q2    features using standardization technique//
+
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+data = pd.read_csv('data_preprocess.csv')
+
+print("Original dataset:")
+print(data.head())
+
+X = data.drop('Name', axis=1)
+
+numeric_columns = X.select_dtypes(include=['float64', 'int64']).columns
+
+scaler = StandardScaler()
+
+X[numeric_columns] = scaler.fit_transform(X[numeric_columns])
+
+print("\nScaled dataset:")
+print(X.head())
+
+
+

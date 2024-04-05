@@ -1,0 +1,366 @@
+//#SET A(Q1)1. Write a python program to implement following Linear Regression Models for predicting house price: (House_price_prediction.csv)
+#i. Simple Linear Regression (Use sqft_living column)////
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+data = pd.read_csv("House_price_prediction.csv")
+
+# Simple Linear Regression with Graph
+def simple_linear_regression_with_graph(data):
+    X = data[['sqft_living']]
+    y = data['price']
+    
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Train the model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    
+    # Make predictions
+    y_pred = model.predict(X_test)
+    
+    # Calculate mean squared error
+    mse = mean_squared_error(y_test, y_pred)
+    
+    # Visualize the results
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X_test.values, y_test.values, color='blue', label='Actual')
+    plt.plot(X_test.values, y_pred, color='red', linewidth=2, label='Predicted')
+    plt.title('Simple Linear Regression')
+    plt.xlabel('Square Footage of Living Space')
+    plt.ylabel('House Price')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
+    print("Mean Squared Error:", mse)
+
+# Call the simple_linear_regression_with_graph function
+
+
+
+
+
+
+
+///#SETA(Q1)Write a python program to implement following Linear Regression Models for predicting house price: (House_price_prediction.csv)
+#(ii.) Multiple Linear Regression.///
+
+# Multiple Linear Regression
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+data = pd.read_csv("House_price_prediction.csv")
+
+# Select features (X) and target variable (y)
+X = data[['sqft_living', 'bedrooms', 'bathrooms', 'floors']]
+y = data['price']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the multiple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Visualize the results
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, color='blue')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2)
+plt.xlabel('Actual Price')
+plt.ylabel('Predicted Price')
+plt.title('Multiple Linear Regression: Actual vs Predicted Price')
+plt.grid(True)
+plt.show()
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+
+
+
+///#SETA (Q2) Write a python program to implement Polynomial Regression for a given
+dataset. (Use Position_Salaries.csv) //
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv("/home/fymsc38/SEM-2/Artificial Intelligent and Machine Learning 38/Position_Salaries.csv")
+
+# Extracting features (X) and target variable (y)
+X = data.iloc[:, 1:2].values  # Using only 'Level' as feature
+y = data.iloc[:, 2].values
+
+# Split the dataset into training and testing sets (not necessary for this small dataset)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Perform Polynomial Regression
+poly_reg = PolynomialFeatures(degree=4)
+X_poly = poly_reg.fit_transform(X)
+
+# Fit the Polynomial Regression model
+lin_reg = LinearRegression()
+lin_reg.fit(X_poly, y)
+
+# Make predictions
+y_pred = lin_reg.predict(X_poly)
+
+# Evaluate the model
+mse = mean_squared_error(y, y_pred)
+r2 = r2_score(y, y_pred)
+
+print("Mean Squared Error:", mse)
+print("R-squared Value:", r2)
+
+# Visualize the Polynomial Regression results
+plt.scatter(X, y, color='red')
+plt.plot(X, y_pred, color='blue')
+plt.title('Polynomial Regression')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+
+
+
+
+
+
+//#SETA (Q3) Write a python program to implement following Non-linear Regression Models on a given dataset:
+#i. Decision Tree Regression (Use Position_Salaries.csv)//
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv("/home/fymsc38/SEM-2/Artificial Intelligent and Machine Learning 38/Position_Salaries.csv")
+
+# Extracting features (X) and target variable (y)
+X = data.iloc[:, 1:2].values  # Using only 'Level' as feature
+y = data.iloc[:, 2].values
+
+# Decision Tree Regression model
+regressor = DecisionTreeRegressor(random_state=42)
+regressor.fit(X, y)
+
+# Visualizing the Decision Tree Regression results
+X_grid = np.arange(min(X), max(X), 0.01)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color='red')
+plt.plot(X_grid, regressor.predict(X_grid), color='blue')
+plt.title('Decision Tree Regression')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+
+
+
+//#SETA (Q3)Write a python program to implement following Non-linear Regression Models on a given dataset:
+#ii. Support Vector Regression (Use Position_Salaries.csv)///
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv("/home/fymsc38/SEM-2/Artificial Intelligent and Machine Learning 38/Position_Salaries.csv")
+
+# Extracting features (X) and target variable (y)
+X = data.iloc[:, 1:2].values  # Using only 'Level' as feature
+y = data.iloc[:, 2].values
+
+# Feature Scaling
+sc_X = StandardScaler()
+sc_y = StandardScaler()
+X = sc_X.fit_transform(X)
+y = sc_y.fit_transform(y.reshape(-1, 1)).reshape(-1)
+
+# Support Vector Regression model
+regressor = SVR(kernel='rbf')
+regressor.fit(X, y)
+
+# Visualizing the SVR results
+plt.scatter(X, y, color='red')
+plt.plot(X, regressor.predict(X), color='blue')
+plt.title('Support Vector Regression')
+plt.xlabel('Position level (scaled)')
+plt.ylabel('Salary (scaled)')
+plt.show()
+
+
+
+
+
+///#Set B (Q1) IN GRAPH student score study hours/////
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the data
+data = pd.read_csv("HoursScores.csv")
+
+# Split the data into independent (X) and dependent (y) variables
+X = data['Hours'].values.reshape(-1,1)  # Independent variable: Study hours
+y = data['Scores'].values  # Dependent variable: Scores
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Calculate the Mean Squared Error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Plot the regression line
+plt.scatter(X_test, y_test, color='blue')
+plt.plot(X_test, y_pred, color='red')
+plt.title('Hours vs Scores')
+plt.xlabel('Hours studied')
+plt.ylabel('Scores')
+plt.show()
+
+
+
+
+
+# SET-B (Q-2) IN GRAPH  model profit (50 startups csv)
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import OneHotEncoder
+
+# Load the dataset
+data = pd.read_csv("50_Startups_dataset.csv")
+
+# Extract features and target variable
+X = data.iloc[:, :-1]  # Independent variables (R&D Spend, Administration, Marketing Spend, State)
+y = data.iloc[:, -1]   # Dependent variable (Profit)
+
+# Encode categorical variable 'State' using one-hot encoding
+X_encoded = pd.get_dummies(X, columns=['State'], drop_first=True)
+X = np.array(X_encoded)
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the multiple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Visualize the results
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, color='blue')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2)
+plt.xlabel('Actual Profit')
+plt.ylabel('Predicted Profit')
+plt.title('Actual vs Predicted Profit')
+plt.grid(True)
+plt.show()
+
+
+
+
+///#SET-B (Q3-A) Consider the given dataset in the Position_Salaries.csv file:
+#a) Implement the Simple linear regression on the dataset. Using scatter plot, show that Simple linear regression is not fitting well on the given data.///
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Load the dataset
+data = pd.read_csv('Position_Salaries.csv')
+X = data.iloc[:, 1:2].values  # Independent variable (Level)
+y = data.iloc[:, 2].values    # Dependent variable (Salary)
+
+# Step 2: Perform simple linear regression
+regressor = LinearRegression()
+regressor.fit(X, y)
+
+# Step 3: Visualize the results
+plt.scatter(X, y, color='red', label='Actual data')
+plt.plot(X, regressor.predict(X), color='blue', label='Linear Regression')
+plt.title('Simple Linear Regression')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
+
+
+
+
+
+///#SET-B (Q3-B) Consider the given dataset in the Position_Salaries.csv file:
+#b) Apply Polynomial regression on the same data and visualize the results.///
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Load the dataset
+data = pd.read_csv('Position_Salaries.csv')
+X = data.iloc[:, 1:2].values  # Independent variable (Level)
+y = data.iloc[:, 2].values    # Dependent variable (Salary)
+
+# Step 2: Perform polynomial regression
+poly_reg = PolynomialFeatures(degree=4)  # You can adjust the degree as needed
+X_poly = poly_reg.fit_transform(X)
+lin_reg = LinearRegression()
+lin_reg.fit(X_poly, y)
+
+# Step 3: Visualize the results
+plt.scatter(X, y, color='red', label='Actual data')
+plt.plot(X, lin_reg.predict(poly_reg.fit_transform(X)), color='blue', label='Polynomial Regression')
+plt.title('Polynomial Regression')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
